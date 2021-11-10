@@ -1,3 +1,0 @@
-if [ -f ${ZDOTDIR}/.zshrc ]; then
-    . ${ZDOTDIR}/.zshrc
-fi
