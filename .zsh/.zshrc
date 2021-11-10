@@ -1,3 +1,6 @@
+# # 起動時間計測用
+# zmodload zsh/zprof && zprof
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -106,6 +109,7 @@ setopt always_last_prompt   # カーソル位置は保持したままファイ�
 setopt print_eight_bit      # 8ビット文字を通す
 setopt extended_glob        # 拡張globで補完
 setopt globdots             # .の指定をせずに.で始まるファイルをマッチ
+setopt nomatch              # メタ文字でマッチした場合にエラーとしない
 
 zstyle ':completion:*:default' menu select
 zstyle ':completion:*' verbose yes
@@ -177,7 +181,7 @@ autoload -Uz _zinit
 
 zinit wait"!0" lucid light-mode for \
 atload"zicompinit; zicdreplay" \
-zdharma-continuum/fast-syntax-highlighting\
+zdharma-continuum/fast-syntax-highlighting \
 atload"_zsh_autosuggest_start" \
 zsh-users/zsh-autosuggestions \
 zsh-users/zsh-completions \
@@ -205,3 +209,8 @@ if [[ $TERM_PROGRAM == "" ]] ; then
 else
     [[ ! -f ${ZDOTDIR}/.p10k.vscode.zsh ]] || source ${ZDOTDIR}/.p10k.vscode.zsh
 fi
+
+# # 起動時間計測用
+# if (which zprof > /dev/null 2>&1) ;then
+#   zprof
+# fi
