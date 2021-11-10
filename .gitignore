@@ -1,3 +1,9 @@
+# 共通
+*.local
+
+# bash
+
+# zsh
 .zsh/.zsh_history
 .zsh/.zcompdump
 .zsh/.zinit
