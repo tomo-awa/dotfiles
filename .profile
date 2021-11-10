@@ -8,11 +8,35 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-eval "$(/home/awwa03580/.linuxbrew/bin/brew shellenv)"
+# locale
+export LANG="ja_JP.UTF-8"
+export LANGUAGE="ja_JP.UTF-8"
+export LC_CTYPE="ja_JP.UTF-8"
+export LC_TIME="ja_JP.UTF-8"
+
+# homebrew
+eval "$($HOME/.linuxbrew/bin/brew shellenv)"
 export HOMEBREW_BUNDLE_FILE=~/.Brewfile
+
+export HOMEBREW_FORCE_BREWED_CURL=1
+export HOMEBREW_FORCE_BREWED_CA_CERTIFICATES=1
+
+export LD_LIBRARY_PATH="$HOME/.linuxbrew/lib:$LD_LIBRARY_PATH"
+export C_INCLUDE_PATH="$HOME/.linuxbrew/include:$C_INCLUDE_PATH"
 
 # locale
 export LANG="ja_JP.UTF-8"
 export LANGUAGE="ja_JP.UTF-8"
 export LC_CTYPE="ja_JP.UTF-8"
 export LC_TIME="ja_JP.UTF-8"
+
+# proxy
+
+# anyenv
+if [[ $SHELL == `which zsh` ]] ; then
+    # zsh
+    eval "$(anyenv init - zsh)"
+else
+    # bash
+    eval "$(anyenv init -)"
+fi
