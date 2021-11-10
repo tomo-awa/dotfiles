@@ -14,15 +14,16 @@ My Dotfiles
 ################################################################      ##  ##################
 ~~~
 
-## 対応したいもの
+## 対応予定
 
-- bash(setup shell)
-- homebrew
-  - git
-  - zsh(main shell)
-  - tmux
-  - vim
-- Vscode(?)
+- `bash`
+- `homebrew`
+  - `zsh(main shell)`
+    - `zinit`
+  - `anyenv`
+- `git`
+- `tmux`
+- `vim`
 - etc...
 
 ## wsl, homebrewでgccがインストールができない 20211107
