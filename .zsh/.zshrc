@@ -62,6 +62,8 @@ HISTSIZE=1000
 SAVEHIST=10000
 HISTFILE="${ZDOTDIR}/.zsh_history"
 
+autoload history-search-end # 入力途中の履歴補完を有効化する
+setopt hist_verify          # 履歴の展開を実行前に確認
 setopt hist_ignore_dups     # 重複するヒストリを持たない
 setopt hist_ignore_space    # 空白ではじまるコマンドを保持しない
 setopt share_history        # 同時起動しているzsh間でヒストリを共有
@@ -87,7 +89,8 @@ DIRSTACKSIZE=100            # ディレクトリスタックのサイズ
 # completion
 # ==============================================================
 
-autoload -Uz compinit && compinit
+# zicompinitと等価のためコメントアウト
+# autoload -Uz compinit && compinit
 
 setopt auto_menu            # 補完キー連打で順に補完
 setopt auto_list            # 候補が複数の時、list表示
@@ -177,31 +180,43 @@ fi
 source "${ZDOTDIR}/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
-### End of Zinit's installer chunk
 
 zinit wait"!0" lucid light-mode for \
 atload"zicompinit; zicdreplay" \
 zdharma-continuum/fast-syntax-highlighting \
 atload"_zsh_autosuggest_start" \
 zsh-users/zsh-autosuggestions \
+blockf atpull'zinit creinstall -q .' \
 zsh-users/zsh-completions \
 mafredri/zsh-async \
 zdharma-continuum/history-search-multi-word \
 zsh-users/zsh-history-substring-search \
 supercrabtree/k \
-chrissicool/zsh-256color \
+chrissicool/zsh-256color
+
+zinit wait"!0" light-mode for \
+as"completion" id-as"auto" \
+https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
+
+if [[ $(docker-compose version --short) = [0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    zinit wait"!0" light-mode for \
+    as"completion" id-as"auto" \
+    https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/zsh/_docker-compose
+fi
 
 zinit light romkatv/powerlevel10k
 
 # zdharma-continuum/fast-syntax-highlighting 実行可能なコマンドに色付け
 # zsh-users/zsh-autosuggestions コマンド履歴を灰色でサジェスト
-# zsh-users/zsh-completions コマンドの補完のきょうか
+# zsh-users/zsh-completions コマンドの補完の強化
 # mafredri/zsh-async 非同期処理
 # zdharma-continuum/history-search-multi-word "Ctrl+r"でコマンド履歴を検索
 # zsh-users/zsh-history-substring-search コマンド入力途中に上下キーで履歴が出る
 # chrissicool/zsh-256color 256色表示
 # romkatv/powerlevel10k テーマ
 # supercrabtree/k gitの変更を表示できるls（文字化け問題: brew zshで解決）
+
+### End of Zinit's installer chunk
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 if [[ $TERM_PROGRAM == "" ]] ; then
