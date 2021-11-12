@@ -4,10 +4,10 @@ case $- in
     *) return;;
 esac
 
-## 新しく作られたファイルのパーミッションがつねに 644 になるようにする。基本。
+# 新規作成下ファイルのパーミッションを644にする
 umask 022
 
-## core ファイルを作らせないようにする。これも基本。
+# core ファイルを作らせないようにする
 ulimit -c 0
 
 # 履歴関連
@@ -16,18 +16,13 @@ shopt -s histappend
 HISTSIZE=1000
 HISTFILESIZE=2000
 
-# windowsize
+# windowsizeを実行毎に更新
 shopt -s checkwinsize
 
-# make less more friendly for non-text input files, see lesspipe(1)
+# lessにテキスト以外が入力された時の挙動を変更
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-#color
+# color
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
@@ -43,19 +38,11 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='\[\033[34m\]\w\[\033[31m\]$(__git_ps1)\[\033[00m\]\$ '
+    PS1='\[\033[34m\][ \w ]\[\033[31m\]$(__git_ps1)\[\033[00m\]\$ '
 else
-    PS1='\w\$(__git_ps1)$'
+    PS1='[ \w ]$(__git_ps1)$ '
 fi
 unset color_prompt force_color_prompt
-
-case "$TERM" in
-    xterm*|rxvt*)
-        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-    *)
-    ;;
-esac
 
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
@@ -70,7 +57,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
