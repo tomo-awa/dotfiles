@@ -181,7 +181,7 @@ source "${ZDOTDIR}/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-zinit wait"!0" lucid light-mode for \
+zinit wait"0" lucid light-mode for \
 atload"zicompinit; zicdreplay" \
 zdharma-continuum/fast-syntax-highlighting \
 atload"_zsh_autosuggest_start" \
