@@ -5,7 +5,8 @@
 
 # zsh
 .zsh/.zsh_history
-.zsh/.zcompdump
+.zsh/.zcompdump*
 .zsh/.zinit
 .zsh/.p10k.zsh
 .zsh/.p10k.vscode.zsh
+.zsh/.zcompcache
