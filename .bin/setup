@@ -66,10 +66,10 @@ done
 
 
 command echo -e "==========================="
-command echo -e "=====\e[1m dotfile install \e[m====="
+command echo -e "=====\e[1m dotfile setup \e[m====="
 command echo -e "==========================="
 
 link_to_homedir
 git config --global include.path "~/.gitconfig_shared"
 command echo -e ""
-command echo -e "\e[1;36m Install completed!!!! \e[m"
+command echo -e "\e[1;36m Setup completed!!!! \e[m"
