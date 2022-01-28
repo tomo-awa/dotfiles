@@ -1,0 +1,14 @@
+# ==== Emojis ====
+# 🎉  :tada: 初コミット             ♻️  :recycle: リファクタリング
+# 👍  :+1: 機能改善                 🚀  :rocket: パフォーマンス改善
+# 🐛  :bug: バグ修正                📐  :triangular_ruler: Lintエラー, スタイル修正
+# ✨  :sparkles: 機能追加           ✏️  :pencil2: typo修正
+# 🔥  :fire: 機能削除               📝  :memo: コメント変更
+# 🛑  :stop_sign: 機能一時停止      📚  :books: ドキュメント
+# 🎨  :art: デザイン変更            🚧  :construction: 作業中
+# 🚚  :truck: リネーム, 移動
+
+# ==== Format ====
+# :emoji: Subject
+#
+# Commit body...
