@@ -9,6 +9,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # ==============================================================
+# mise
+# ==============================================================
+
+eval "$(/bin/mise activate zsh)"
+
+# ==============================================================
 # keybindings
 # ==============================================================
 
@@ -31,45 +37,61 @@ local LIGHT_BLUE=${fg[cyan]}
 local WHITE=${fg[white]}
 
 # ==============================================================
-# prompt
-# ==============================================================
-# %M    ホスト名
-# %m    ホスト名
-# %d    カレントディレクトリ(フルパス)
-# %~    カレントディレクトリ(フルパス2)
-# %C    カレントディレクトリ(相対パス)
-# %c    カレントディレクトリ(相対パス)
-# %n    ユーザ名
-# %#    ユーザ種別
-# %?    直前のコマンドの戻り値
-# %D    日付(yy-mm-dd)
-# %W    日付(yy/mm/dd)
-# %w    日付(day dd)
-# %*    時間(hh:flag_mm:ss)
-# %T    時間(hh:mm)
-# %t    時間(hh:mm(am/pm))
-
-# autoload -Uz promptinit && promptinit
-
-# PROMPT='%B%F{002}%m{%n}%b%f%#'
-# RPROMPT='%B%F{004}[ %c ]%f : %*%b'
-
-# ==============================================================
 # history
 # ==============================================================
 
 HISTSIZE=1000
-SAVEHIST=10000
+SAVEHIST=100000
 HISTFILE="${ZDOTDIR}/.zsh_history"
 
 autoload history-search-end # 入力途中の履歴補完を有効化する
+autoload -Uz add-zsh-hook
+
 setopt hist_verify          # 履歴の展開を実行前に確認
 setopt hist_ignore_dups     # 重複するヒストリを持たない
 setopt hist_ignore_space    # 空白ではじまるコマンドを保持しない
+setopt hist_ignore_all_dups # 履歴中の重複行をファイル記録前に無くす
+setopt hist_find_no_dups    # 履歴検索中、(連続してなくとも)重複を飛ばす
+setopt hist_no_store        # histroyコマンドは記録しない
+setopt hist_reduce_blanks   # 余分なスペースを削除してヒストリに保存する
 setopt share_history        # 同時起動しているzsh間でヒストリを共有
 setopt inc_append_history   # 履歴をすぐに追加する
 
 alias h='fc -lt '%F %T' 1'  # historyの日付を表示
+
+# http://mollifier.hatenablog.com/entry/20090728/p1
+zshaddhistory() {
+    local line=${1%%$'\n'} #コマンドライン全体から改行を除去したもの
+    local cmd=${line%% *}  # １つ目のコマンド
+    # 以下の条件をすべて満たすものだけをヒストリに追加する
+    [[ ${#line} -ge 5
+        && ${cmd} != (l|l[sal])
+        && ${cmd} != (cd)
+        && ${cmd} != (m|man)
+        && ${cmd} != (r[mr])
+    ]]
+}
+
+add-zsh-hook precmd zshaddhistory
+
+# # https://xyk.hatenablog.com/entry/2022/03/15/175914
+# # 実行失敗コマンドを残さない
+
+# remove_last_history_if_not_needed () {
+#   local last_status="$?"
+#   if [[ ${last_status} -ne 0 ]]; then
+#     fc -W
+#     ed -s ${HISTFILE} <<EOF >/dev/null
+# d
+# w
+# q
+# EOF
+#     fc -R
+#   fi
+# }
+
+# add-zsh-hook precmd remove_last_history_if_not_needed
+
 
 # ==============================================================
 # cd
@@ -137,15 +159,7 @@ zstyle ':completion:*:messages' format $YELLOW'%d'$DEFAULT
 zstyle ':completion:*:warnings' format $RED'No matches for:'$YELLOW' %d'$DEFAULT
 zstyle ':completion:*:descriptions' format $YELLOW'completing %B%U%d%u%b'$DEFAULT
 zstyle ':completion:*:corrections' format $YELLOW'%B%d '$RED'(errors: %e)%b'$DEFAULT
-
-# export LSCOLORS=Exfxcxdxbxegedabagacad
-# export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-
-
-# セパレータ設定（デフォルトは '--' ）
-# zstyle ':completion:*' list-separator '-->'
-# zstyle ':completion:*:manuals' separate-sections true
 
 # ==============================================================
 # alias
@@ -194,16 +208,6 @@ zsh-users/zsh-history-substring-search \
 supercrabtree/k \
 chrissicool/zsh-256color
 
-zinit wait"!0" light-mode for \
-as"completion" id-as"auto" \
-https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
-
-if [[ $(docker-compose version --short) = [0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    zinit wait"!0" light-mode for \
-    as"completion" id-as"auto" \
-    https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/zsh/_docker-compose
-fi
-
 zinit light romkatv/powerlevel10k
 
 # zdharma-continuum/fast-syntax-highlighting 実行可能なコマンドに色付け
@@ -222,8 +226,11 @@ zinit light romkatv/powerlevel10k
 if [[ $TERM_PROGRAM == "" ]] ; then
     [[ ! -f ${ZDOTDIR}/.p10k.zsh ]] || source ${ZDOTDIR}/.p10k.zsh
 else
-    [[ ! -f ${ZDOTDIR}/.p10k.vscode.zsh ]] || source ${ZDOTDIR}/.p10k.vscode.zsh
+    [[ ! -f ${ZDOTDIR}/.p10k.zsh ]] || source ${ZDOTDIR}/.p10k.zsh
+    # [[ ! -f ${ZDOTDIR}/.p10k.vscode.zsh ]] || source ${ZDOTDIR}/.p10k.vscode.zsh
 fi
+
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 
 # # 起動時間計測用
 # if (which zprof > /dev/null 2>&1) ;then
